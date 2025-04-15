@@ -27,7 +27,7 @@ app.use('/api/products', require('./routes/productRoutes'));
 
 //root route
 app.get('/', (req, res) => {
-  res.send(`API is running on porttttt ${process.env.PORT}...`);
+  res.send(`API is runninggggggggggg on porttttt ${process.env.PORT}...`);
 });
 
 
