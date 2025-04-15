@@ -11,6 +11,11 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    - name: Fix permissions before checkout
+      run: |
+        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/product-api-ci-cd || true
+        sudo chmod -R 755 /home/ubuntu/actions-runner/_work/product-api-ci-cd || true
+
     - uses: actions/checkout@v4
 
     - name: Pull Docker image
