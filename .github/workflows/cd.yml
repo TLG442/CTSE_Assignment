@@ -7,28 +7,26 @@ on:
       - completed
 
 jobs:
-
-  build:
-
+  deploy:
     runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v4
-    - name: Create .env file
-      run: |
-        echo "NODE_ENV=production" > .env
-        echo "PORT=${{ secrets.PORT }}" >> .env
-        echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
-        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-        echo "JWT_EXPIRE=30d" >> .env
 
     - name: Pull Docker image
-      run: sudo docker pull tharukal/product-api-ci-cd:latest
-    - name: Stop and remove existing containers
+      run: docker pull tharukal/product-api-ci-cd:latest
+
+    - name: Delete old docker container
       run: |
-        sudo docker compose down || true
-        sudo docker rm -f product-api-ci-cd || true
-        sudo docker rm -f mongodb || true
-    - name: Deploy with Docker Compose
+        docker stop product-api-ci-cd || true
+        docker rm -f product-api-ci-cd || true
+
+    - name: Run Docker Container
       run: |
-        sudo docker compose up -d
+        docker run -d -p 5000:5000 --name product-api-ci-cd \
+          -e NODE_ENV=production \
+          -e PORT=5000 \
+          -e MONGO_URI=${{ secrets.MONGO_URI }} \
+          -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+          -e JWT_EXPIRE=30d \
+          tharukal/product-api-ci-cd:latest
