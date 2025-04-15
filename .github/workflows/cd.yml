@@ -27,7 +27,7 @@ jobs:
     - name: Stop and remove existing containers
       run: |
         sudo docker compose down || true
-        sudo docker rm -f product-api-ci-cd-container || true
+        sudo docker rm -f product-api-ci-cd || true
         sudo docker rm -f mongodb || true
     - name: Deploy with Docker Compose
       run: |
