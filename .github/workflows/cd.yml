@@ -1,0 +1,34 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Create .env file
+      run: |
+        echo "NODE_ENV=production" > .env
+        echo "PORT=${{ secrets.PORT }}" >> .env
+        echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+        echo "JWT_EXPIRE=30d" >> .env
+
+    - name: Pull Docker image
+      run: sudo docker pull tharukal/product-api-ci-cd:latest
+    - name: Stop and remove existing containers
+      run: |
+        sudo docker compose down || true
+        sudo docker rm -f product-api-ci-cd-container || true
+        sudo docker rm -f mongodb || true
+    - name: Deploy with Docker Compose
+      run: |
+        sudo docker compose up -d
