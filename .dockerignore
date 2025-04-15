@@ -1,0 +1,29 @@
+
+#ignore node modules - install fresh ones in the container
+node_modules
+
+#ignore logs
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+*.env
+
+
+#ignore Git and version control
+.git
+.gitignore
+.github
+
+#ignore Docker files in the build
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+#ignore build output
+dist
+build
+out
